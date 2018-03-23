@@ -13,6 +13,7 @@ class Client(object):
         self.sock.connect((host, port))
         print("connected to", host, port)
         self.sock.setblocking(0)
+        self.name = self.sock.getsockname()
 
 
     def send(self, pack):
