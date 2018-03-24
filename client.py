@@ -1,5 +1,5 @@
 import socket
-
+from utils import *
 import time
 import select
 
@@ -9,15 +9,16 @@ class Client(object):
         self.host = host
         self.port = port
         self.dataQueue = []
-        self.sock = socket.socket()
-        self.sock.connect((host, port))
-        print("connected to", host, port)
-        self.sock.setblocking(0)
-        self.name = self.sock.getsockname()
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        #this part is for only TCP usage only
+        #self.sock.connect((host, port))
+        #print("connected to", host, port)
+        #self.sock.setblocking(0)
+        #self.name = self.sock.getsockname()
 
 
     def send(self, pack):
-        self.sock.send(pack)
+        self.sock.sendto(pack.encode(), (self.host, self.port))
         ready = select.select([self.sock], [], [], 3)
         data =  None
         if ready[0]:
@@ -38,10 +39,7 @@ class Client(object):
 
 
 if __name__=="__main__":
-    cl = Client('localhost', 9090)
-    cl.send("testpack")
-    cl.send("testpackagain")
-    cl.read()
-    cl.read()
-    cl.read()
-    time.sleep(1000)
+    cl = Client(host, port)
+    cl.send(register)
+    time.sleep(3)
+
